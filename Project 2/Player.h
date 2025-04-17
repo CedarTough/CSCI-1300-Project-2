@@ -8,7 +8,8 @@ using namespace std;
 
 class Player {
     public:
-
+        int board;
+        
     private:
         int _player_num;
         const static int _max_advisors = 3;

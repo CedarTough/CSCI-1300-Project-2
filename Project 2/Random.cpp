@@ -9,4 +9,5 @@ int main(){
     srand(seed);
     cout << (rand() % 6) + 1 << endl;
 
+    
 }

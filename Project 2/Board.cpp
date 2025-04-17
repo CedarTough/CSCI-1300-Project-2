@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "Player.h"
 #include <iostream>
 using namespace std;
 
@@ -24,12 +25,31 @@ void Board::initializeBoard()
 #include <cstdlib> // For rand() and srand()
 #include <ctime> // For time()
 
-void Board::initializeTiles(int player_index)
+void Board::initializeTiles(int boardType)
 {
     Tile temp;
     int green_count = 0;
     int total_tiles = _BOARD_SIZE;
+    int greenMax, probBlue, probPink, probBrown, probRed, probPurple;       // Max Green tiles and probabilities declared
 
+    if (boardType==0) {
+        greenMax=30;
+
+        probBlue=20;
+        probPink=20;
+        probBrown=20;
+        probRed=20;
+        probPurple=20;
+    }
+    else {
+        greenMax=15;
+        
+        probBlue=20;
+        probPink=20;
+        probBrown=20;
+        probRed=20;
+        probPurple=20;
+    }
 
     // Keep track of green tile positions to ensure we place exactly 30 greens
     for (int i = 0; i < total_tiles; i++)
@@ -41,35 +61,32 @@ void Board::initializeTiles(int player_index)
         else if (i == 0) {
             temp.color = 'Y';
         }
-        else if (green_count < 30 && (rand() % (total_tiles - i) < 30 -green_count)) {
+        else if (green_count < greenMax && (rand() % (total_tiles - i) < greenMax - green_count)) {
             temp.color = 'G';
             green_count++;
         }
         else
         {
         // Randomly assign one of the other colors: Blue, Pink, Brown, Red, Purple
-        int color_choice = rand() % 5;
-        switch (color_choice)
-            {
-            case 0:
+        int color_choice = rand() % 100;
+        if (color_choice < probBlue)
                 temp.color = 'B'; // Blue
-                break;
-            case 1:
+        else if (color_choice < probBlue+probPink)
                 temp.color = 'P'; // Pink
-                break;
-            case 2:
+        else if (color_choice < probBlue+probPink+probBrown)
                 temp.color = 'N'; // Brown
-                break;
-            case 3:
+        else if (color_choice < probBlue+probPink+probBrown+probRed)
                 temp.color = 'R'; // Red
-                break;
-            case 4:
-                temp.color = 'U'; // Purple
-                break;
-            }
+        else if (color_choice < probBlue+probPink+probBrown+probRed+probPurple)
+                temp.color = 'U'; // Purple 
+        else {
+            cout <<  "You are a monkey. Learn probability please" <<endl;
+            break;
+        }            
+            
         }
     // Assign the tile to the board for the specified lane
-    _tiles[player_index][i] = temp;
+    _tiles[boardType][i] = temp;
     }
 }
 
@@ -104,8 +121,18 @@ if (_player_position[player_index] == pos) {
 void Board::displayTile(int player_index, int pos)
 {
     string color = " ";
-    int player = isPlayerOnTile(player_index, pos);
-    
+
+    bool player1here = false;
+    bool player2here = false;
+
+  
+    if (_player_position[0] == pos && player_index == playerBoard[0]) {
+        player1here = true;
+    }
+    if (_player_position[1] == pos && player_index == playerBoard[1]) {
+        player2here = true;
+    }
+      
     if (_tiles[player_index][pos].color == 'R') {
         color = RED;
     }
@@ -130,8 +157,14 @@ void Board::displayTile(int player_index, int pos)
     else if (_tiles[player_index][pos].color == 'Y') {
         color = GREY;
     }
-    if (player == true) {
-        cout << color << "|" << (player_index + 1) << "|" << RESET;
+    if (player1here && player2here) {
+        cout << color << "|" << "1&2" << "|" << RESET;
+    }
+    else if (player1here) {
+        cout << color << "|" << "1" << "|" << RESET;
+    }
+    else if (player2here) {
+        cout << color << "|" << "2" << "|" << RESET;
     }
     else {
         cout << color << "| |" << RESET;
@@ -143,13 +176,13 @@ void Board::displayTrack(int track_index) {
     for (int i = 0; i < _BOARD_SIZE; i++) {
         displayTile(track_index, i);
     }
-    cout << endl;
+    cout << "                                                                                           "<< endl;
 }
 
 void Board::displayBoard() {
     for (int i = 0; i < 2; i++) {
         displayTrack(i);
-        if (i == 0) {
+        if (true) {
             cout << endl; // Add an extra line between the two lanes
         }
     }
@@ -169,4 +202,11 @@ int Board::getPlayerPosition (int player_index) const {
         return _player_position[player_index];
     }
     return -1;
+}
+
+
+// Func. I added
+
+char Board::returnTileColor(int playerNo, int pos){
+    return _tiles[playerBoard[playerNo]][pos].color;
 }
