@@ -24,33 +24,6 @@ Board movePhase(int roll, int playerNumber, Board board) {
     return board; 
 }
 
-void runEvent(int playerNo,int pos,Board board){
-    int color = board.returnTileColor(playerNo,pos);  // Change function names when we know what each color reps.
-    if (color == 'R') {
-        eventRed(board);
-    }
-    else if (color == 'G') {
-        eventGreen(board);
-    }
-    else if (color == 'B') {
-        eventBlue(board);
-    }
-    else if (color == 'U') {
-        eventPurple(board);
-    }
-    else if (color == 'N') {
-        eventBrown(board);
-    }
-    else if (color == 'P') {
-        eventPink(board);
-    }
-    else if (color == 'O') {
-        eventOrange(board);
-    }
-    else if (color == 'Y') {
-        eventGrey(board);
-  }
-}
 
 
 
@@ -92,7 +65,7 @@ int main () {
     runEvent(i,board.getPlayerPosition(i),board);  // After displaying, we want to run the event
     } 
   }
-  // after both players have reached the end, this is run
+  // after both players have reached the end, this is run (point calculation, winner, etc.)
  
  
 
