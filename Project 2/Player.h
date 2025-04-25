@@ -1,20 +1,30 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <iostream>
-#include "Character.h"
-#include "Advisor.h"
 
 using namespace std;
 
 class Player {
-    public:
-        int board;
-        
     private:
-        int _player_num;
-        const static int _max_advisors = 3;
-        Character _cub;
-        Advisor _advisor[_max_advisors];
+        string playerName;
+        string characterName;
+        string advisorName;
+        string advisorAbility;
+        int age;
+        int strength;
+        int stamina;
+        int wisdom;
+        int pridePoints;
+        int path;
+    public:
+        Player();
+        void storeStats(const vector<string>);
+        void storePath(int);
+        void storeAdvisor(string);
+        void print();
+        void setName(string);
+        string getAdvisorName();
+        string getAdvisorAbility();
 };
 
 #endif
