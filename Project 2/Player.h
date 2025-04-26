@@ -23,8 +23,14 @@ class Player {
         void storeAdvisor(string);
         void print();
         void setName(string);
+        void setStrength(int);
+        void setStamina(int);
+        void setWisdom(int);
+        void setPridePoints(int);
         string getAdvisorName();
         string getAdvisorAbility();
+        int getPath();
+        string getPlayerName();
 };
 
 #endif
