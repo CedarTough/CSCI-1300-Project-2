@@ -106,13 +106,10 @@ int arrowKeys (const vector<string> lines, int index, const vector<string> heade
     return index;
 }
 
-vector<string> characterSelection (const vector<string> character, int index, const vector<string> header) {
+vector<string> characterSelection (const vector<string> character, int index) {
     string chosen;
     vector <string> infos;
-    string info;
-
-    index = arrowKeys(character, index, header);
-    
+    string info;    
     chosen = character[index];
     stringstream piece(chosen); 
     while(getline(piece, info, '|')) {
@@ -122,6 +119,81 @@ vector<string> characterSelection (const vector<string> character, int index, co
     return infos;
 }
 
+bool displayMenu (int index, Player player[], Board board, string name) {
+    vector<string> mainHeader = {name + " Its Your Turn!", "Main Menu: Select an Option to Continue"};
+    vector<string> adHeader = {"----View Name or Ability----"};
+    vector<string> adMenu = {"1: Advisor Name", "2: Advisor Ability", "-Return to Main Menu-"};
+    vector<string> menu = {"1. Check Player Progress", "2. Review Advisor",
+    "3. View Board", "4. Forage", "5. Move Forward"};
+
+    int chosenIndex = 0;
+    chosenIndex = arrowKeys(menu, chosenIndex, mainHeader);
+
+    switch(chosenIndex) {
+        case 0: //Check Player Progree
+            system("cls");
+            player[index].print();
+            cout << endl;
+            cout << "Press Enter to Return to Main Menu..." << endl;
+            cin.ignore();
+            cin.get();
+            break;
+        case 1: //Review Advisor
+            system("cls");
+            if(player[index].getAdvisorName() == "") {
+                cout << "You have no Advisor" << endl;
+                cout << "Press Enter to Return to Main Menu..." << endl;
+                cin.ignore();
+                cin.get();
+                break;
+            }
+            else {
+                bool review = true;
+                while(review) {
+                    int newIndex = 0;
+                    newIndex = arrowKeys(adMenu, newIndex, adHeader);
+                    switch(newIndex) {
+                    case 0:
+                        system("cls");
+                        cout << "Your Advisors Name is: " << player[index].getAdvisorName() << endl;
+                        cout << "Press Enter to Return to Advisor Menu..." << endl;
+                        cin.ignore();
+                        cin.get();
+                        break;
+                    case 1:
+                        system("cls");
+                        cout << "Your Advisors Ability is: " << player[index].getAdvisorAbility() << endl;
+                        cout << "Press Enter to Return to Advisor Menu..." << endl;
+                        cin.ignore();
+                        cin.get();
+                        break;
+                    case 2:
+                        review = false;
+                    }
+                }
+            }
+            break;
+        case 2: //View Board
+            system("cls");
+            board.displayBoard();
+            cout << "Press Enter to Return to Main Menu..." << endl;
+            cin.ignore();
+            cin.get();
+            break;
+
+        case 3: //Maybe Forage
+            system("cls");
+            cout << "You Foraged and found... nothing" << endl;
+            cout << "Press Enter to Return to Main Menu..." << endl;
+            cin.ignore();
+            cin.get();
+            break;
+        
+        case 4: //Move Foward
+            return false;
+    }
+    return true;
+}
 
 //  MAIN CODE STARTS HERE
 int main () {
@@ -161,32 +233,57 @@ else {
 
 //Enter Player Name
 string playerName;
+string enter;
 Player p[2];
-vector<string> path = {"1: Go straight to the Pride lands", "2: Go to cub training"};
+vector<string> path = {"1: Go to cub training", "2: Go straight to the Pride lands", "--See Path Details--"};
 
 for (int i = 0; i < 2; i++) {
     int index = 0;
+    int chosenIndex;
     cout << "Player " << i + 1 << " Enter Your Name: ";
     cin >> playerName;
     p[i].setName(playerName);
 
     vector<string> selectionHeader = {playerName +", Please Choose a Character:", 
                                      "Name|Age|Strength|Stamina|Wisdom|PridePoints"};
-    vector<string> selected1 = characterSelection(characterLines, index, selectionHeader);
-    p[i].storeStats(selected1);
+    chosenIndex = arrowKeys(characterLines, index, selectionHeader);
+    vector<string> selected = characterSelection(characterLines, chosenIndex);
+    p[i].storeStats(selected);
+
+    characterLines.erase(characterLines.begin() + chosenIndex);
 
     vector<string> pathHeader = {playerName + " Choose Your Path:"};
     index = arrowKeys(path, index, pathHeader);
-    p[i].storePath(index);
+   
+    while (index == 2) {
+        system("cls");
+        cout << "----Cub Training----" << endl;
+        cout << "Spend 5,000 pride to gain a random Advisor" << endl;
+        cout << "+500 Strength and Stamina" << endl;
+        cout << "+1,000 Wisdom points" << endl << endl;
+        cout << "----Straight to Pride Lands----" << endl;
+        cout << "Gain 5,000 pride points" << endl;
+        cout << "+200 Strength, Stamina, and Wisdom Points" << endl << endl;
+        cout << "Press Enter to return to Path Selection..." << endl;
+        cin.ignore();
+        cin.get();
+        index = arrowKeys(path, index, pathHeader);
+    }
+        p[i].storePath(index);
 
-    if (index == 1) {
+    if (index == 0) {
+        p[i].setPridePoints(-5000);
+        p[i].setStamina(500);
+        p[i].setStrength(500);
+        p[i].setWisdom(1000);
+
         string randoAdvisor;
         cout << playerName << ": You chose Cub Training, a random Advisor will now be given to you." << endl << endl;
         cout << "----Advisor List----" << endl;
         cout << "Name|Ability" << endl;
         int adSize = advisorLines.size();
         for (int j = 0; j < adSize; j++) {
-            cout << j+1 << ": " << advisorLines[j] << endl;
+            cout << j+1 << ". " << advisorLines[j] << endl;
         }
         cout << endl;
         randoAdvisor = advisorLines[dice(rollDice()) - 1];
@@ -194,29 +291,54 @@ for (int i = 0; i < 2; i++) {
         string randoName = p[i].getAdvisorName();
         string randoAbility = p[i].getAdvisorAbility();
         cout << "You got: " << randoName << ", Their ability is: " << randoAbility << endl;
+        cout << "Press Enter to Continue..." << endl;
+        cin.ignore();
+        cin.get();
+    }
+    if (index == 1) {
+        p[i].setPridePoints(5000);
+        p[i].setStamina(200);
+        p[i].setStrength(200);
+        p[i].setWisdom(200);
     }
 }
 //End of menu
 
-    board.playerBoard[0] = 1;   // 0 means start on cub training. One is for pride lands ask once game start
-    board.playerBoard[1] = 1;   // Can also be used in the future for switching boards mechanic :O
+    board.playerBoard[0] = p[0].getPath();   // 0 means start on cub training. One is for pride lands ask once game start
+    board.playerBoard[1] = p[1].getPath();   // Can also be used in the future for switching boards mechanic :O
+
+    system("cls");
+    cout << "Time to Start!" << endl;
+    cout << "These are your Starting Positions!" << endl;
     board.displayBoard(); // initial positions
+    cout << "Press Enter to Begin!" << endl;
+    cin.ignore();
+    cin.get();
    
- 
   bool playerNotDone[2] = {true, true}; // tests to see if players have reached the goal
   
   // while loop as we play, main gameplay loop
    while (playerNotDone[0] || playerNotDone[1]){ 
     for (int i=0;i<2;i++){
+        string name = p[i].getPlayerName();
 
     if (playerNotDone[i]){
-        cin.get();
         // Insert menu function here that will be used for chossing actions!!!!!!!
-        board = movePhase(rollDice(),i,board);
+        bool choosing = true;
+        while(choosing) {
+            choosing = displayMenu(i, p, board, name);
+        }
+        int moved;
+        cout << name <<", Roll Your Dice To Move (Press Enter)" << endl;
+        cin.ignore();
+        if(cin.get()) {
+            moved = dice(rollDice());
+        }
+        board = movePhase(moved,i,board);
     }
     else{
         cin.get(); // gets can be commented out once the menus done
-        cout<< "Player "<< i+1<< " has finished \n";
+        cout<< "Player "<< i+1 << " has finished \n";
     }
 
     if (board.getPlayerPosition(i)>=51){
@@ -225,6 +347,8 @@ for (int i = 0; i < 2; i++) {
     }
 
     board.displayBoard();  // displays board after each individual move
+    cin.ignore();
+    cin.get();
     runEvent(i,board.getPlayerPosition(i),board);  // After displaying, we want to run the event
     } 
   }
