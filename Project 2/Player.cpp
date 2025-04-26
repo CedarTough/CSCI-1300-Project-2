@@ -46,12 +46,45 @@ void Player::setName(string name) {
     playerName = name;
 }
 
+void Player::setPridePoints(int points) {
+    pridePoints += points;
+}
+
+void Player::setStamina(int points) {
+    stamina += points;
+    if(stamina < 100) {
+        stamina = 100;
+    }
+}
+
+void Player::setStrength(int points) {
+    strength += points;
+    if(strength < 100) {
+        strength = 100;
+    }
+}
+
+void Player::setWisdom(int points) {
+    wisdom += points;
+    if(wisdom < 100) {
+        wisdom = 100;
+    }
+}
+
 string Player::getAdvisorName() {
     return advisorName;
 }
 
 string Player::getAdvisorAbility() {
     return advisorAbility;
+}
+
+int Player::getPath() {
+    return path;
+}
+
+string Player::getPlayerName() {
+    return playerName;
 }
 
 void Player::print(){
@@ -68,13 +101,5 @@ void Player::print(){
     }
     else if (path == 1) {
         cout << "Cub Training" << endl;
-    }
-    cout << "Advisor: ";
-    if (advisorName == "") {
-        cout << "None" << endl;
-    }
-    else {
-        cout << advisorName << endl;
-        cout << "Advisor Ability: " << advisorAbility;
     }
 }
