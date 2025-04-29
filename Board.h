@@ -1,5 +1,6 @@
 #ifndef BOARD_H
 #define BOARD_H
+#include <vector>
 #include "Tile.h"
 
 class Board
