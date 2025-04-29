@@ -64,7 +64,7 @@ if (eventUpdater.player.advisorNo == eventVector[2]){
     return eventUpdater;
 }
 
-cout << "You gain/lose "<<eventVector[3] << "pride points.";
+cout << "You gain/lose "<<eventVector[3] << " pride points.";
 eventUpdater.player.setPridePoints(stoi(eventVector[3]));
 return eventUpdater;
 }
