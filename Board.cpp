@@ -190,10 +190,14 @@ void Board::displayBoard() {
 
 bool Board::movePlayer(int player_index, int num) {
     _player_position[player_index]+=num;
-
+    
+    if (_player_position[player_index] < 0) {
+            _player_position[player_index]=0;
+    }
     if (_player_position[player_index] == _BOARD_SIZE -1) {
         return true;
     }
+    
     return false; 
 }
 
