@@ -12,32 +12,39 @@ using namespace std;
 // board.movePlayer(0); this moves player 1
 // board.movePlayer(1); this move player 2
 
-void runEvent(int playerNo,int pos,Board board){
-    int color = board.returnTileColor(playerNo,pos);  // Change function names when we know what each color reps.
+void pause() {
+    cout << "Press Enter to Return to Main Menu..." << endl;
+    cin.ignore(100000, '\n');
+    cin.get();
+}
+
+eventUpdate runEvent(int playerNo,int pos,eventUpdate eventUpdater){
+    int color = eventUpdater.board.returnTileColor(playerNo,pos);  // Change function names when we know what each color reps.
     if (color == 'R') {
-        eventRed(board);
+        eventUpdater = eventRed(eventUpdater, playerNo);
     }
     else if (color == 'G') {
-        eventGreen(board);
+        eventUpdater = eventGreen(eventUpdater, playerNo);
     }
     else if (color == 'B') {
-        eventBlue(board);
+        eventUpdater = eventBlue(eventUpdater);
     }
     else if (color == 'U') {
-        eventPurple(board);
+        eventUpdater = eventPurple(eventUpdater);
     }
     else if (color == 'N') {
-        eventBrown(board);
+        eventUpdater = eventBrown(eventUpdater, playerNo);
     }
     else if (color == 'P') {
-        eventPink(board);
+        eventUpdater = eventPink(eventUpdater);
     }
     else if (color == 'O') {
-        eventOrange(board);
+        eventUpdater = eventOrange(eventUpdater);
     }
     else if (color == 'Y') {
-        eventGrey(board);
+        eventUpdater = eventGrey(eventUpdater);
   }
+  return eventUpdater;
 }
 
 // Literally just a dice roll
@@ -51,7 +58,7 @@ int rollDice(){
 Board movePhase(int roll, int playerNumber, Board board) {
   
     for (int i = 0; i < roll; i++) {
-        board.movePlayer(playerNumber); // moves once cause function
+        board.movePlayer(playerNumber,1); // moves once cause function
     }
     return board; 
 }
@@ -119,32 +126,45 @@ vector<string> characterSelection (const vector<string> character, int index) {
     return infos;
 }
 
+void compareStats (int stat1, int stat2, string name1, string name2) {
+    system("cls");
+    if (stat1 > stat2) {
+        cout << name1 << " Is in the lead" << endl;
+        cout << name1 << " has " << stat1 << " Points" <<endl;
+        cout << name2 << " has " << stat2 << " Points" << endl;
+    }
+    else if (stat1 < stat2) {
+        cout << name2 << " Is in the lead" << endl;
+        cout << name2 << " has " << stat2 << " Points" << endl;
+        cout << name1 << " has " << stat1 << " Points" << endl;
+    }
+    else if (stat1 == stat2) {
+        cout << "Neither Player are in the Lead" << endl;
+        cout << "Both Players are at " << stat1 << " Points" << endl;
+    }
+}
+
 bool displayMenu (int index, Player player[], Board board, string name) {
     vector<string> mainHeader = {name + " Its Your Turn!", "Main Menu: Select an Option to Continue"};
     vector<string> adHeader = {"----View Name or Ability----"};
+    vector<string> statHeader = {"----Choose Stat To Compare----"};
     vector<string> adMenu = {"1: Advisor Name", "2: Advisor Ability", "-Return to Main Menu-"};
-    vector<string> menu = {"1. Check Player Progress", "2. Review Advisor",
-    "3. View Board", "4. Forage", "5. Move Forward"};
+    vector<string> menu = {"1. Move Forward", "2. Review Advisor",
+        "3. View Board", "4. Compare Progress", "5. Check Player Progress"};
+    vector<string> statMenu = {"1: Compare Strength", "2: Compare Stamina", "3: Compare Wisdom",
+         "4: Compare Pride Points"};
 
     int chosenIndex = 0;
     chosenIndex = arrowKeys(menu, chosenIndex, mainHeader);
 
     switch(chosenIndex) {
-        case 0: //Check Player Progree
-            system("cls");
-            player[index].print();
-            cout << endl;
-            cout << "Press Enter to Return to Main Menu..." << endl;
-            cin.ignore();
-            cin.get();
-            break;
+        case 0: //move foward
+            return false;
         case 1: //Review Advisor
             system("cls");
             if(player[index].getAdvisorName() == "") {
                 cout << "You have no Advisor" << endl;
-                cout << "Press Enter to Return to Main Menu..." << endl;
-                cin.ignore();
-                cin.get();
+                pause();
                 break;
             }
             else {
@@ -158,12 +178,14 @@ bool displayMenu (int index, Player player[], Board board, string name) {
                         cout << "Your Advisors Name is: " << player[index].getAdvisorName() << endl;
                         cout << "Press Enter to Return to Advisor Menu..." << endl;
                         cin.ignore();
+                        cin.ignore();
                         cin.get();
                         break;
                     case 1:
                         system("cls");
                         cout << "Your Advisors Ability is: " << player[index].getAdvisorAbility() << endl;
                         cout << "Press Enter to Return to Advisor Menu..." << endl;
+                        cin.ignore();
                         cin.ignore();
                         cin.get();
                         break;
@@ -176,21 +198,45 @@ bool displayMenu (int index, Player player[], Board board, string name) {
         case 2: //View Board
             system("cls");
             board.displayBoard();
-            cout << "Press Enter to Return to Main Menu..." << endl;
-            cin.ignore();
-            cin.get();
+            pause();
             break;
 
-        case 3: //Maybe Forage
+        case 3: {//Check Standing
             system("cls");
-            cout << "You Foraged and found... nothing" << endl;
-            cout << "Press Enter to Return to Main Menu..." << endl;
-            cin.ignore();
-            cin.get();
+            int newIndex = 0;
+            newIndex = arrowKeys(statMenu, newIndex, statHeader);
+            switch(newIndex) {
+                case 0:
+                    system("cls");
+                    compareStats(player[0].getStrength(), player[1].getStrength(),
+                    player[0].getPlayerName(), player[1].getPlayerName());
+                    break;
+                case 1:
+                    system("cls");
+                    compareStats(player[0].getStamina(), player[1].getStamina(),
+                    player[0].getPlayerName(), player[1].getPlayerName());
+                    break;
+                case 2:
+                    system("cls");
+                    compareStats(player[0].getWisdom(), player[1].getWisdom(),
+                    player[0].getPlayerName(), player[1].getPlayerName());
+                    break;
+                case 3:
+                    system("cls");
+                    compareStats(player[0].getPridePoints(), player[1].getPridePoints(),
+                    player[0].getPlayerName(), player[1].getPlayerName());
+                    break;
+            }
+        }
+            pause();
             break;
         
-        case 4: //Move Foward
-            return false;
+        case 4: //Check Player Progress
+            system("cls");
+            player[index].print();
+            cout << endl;
+            pause();
+            break;
     }
     return true;
 }
@@ -198,6 +244,7 @@ bool displayMenu (int index, Player player[], Board board, string name) {
 //  MAIN CODE STARTS HERE
 int main () {
     Board board(2);
+    eventUpdate eventUpdater; 
 
 //Beginning Menu
 ifstream characterFile("Characters.txt");
@@ -265,7 +312,7 @@ for (int i = 0; i < 2; i++) {
         cout << "Gain 5,000 pride points" << endl;
         cout << "+200 Strength, Stamina, and Wisdom Points" << endl << endl;
         cout << "Press Enter to return to Path Selection..." << endl;
-        cin.ignore();
+        cin.ignore(100000, '\n');
         cin.get();
         index = arrowKeys(path, index, pathHeader);
     }
@@ -278,6 +325,7 @@ for (int i = 0; i < 2; i++) {
         p[i].setWisdom(1000);
 
         string randoAdvisor;
+        cout << endl;
         cout << playerName << ": You chose Cub Training, a random Advisor will now be given to you." << endl << endl;
         cout << "----Advisor List----" << endl;
         cout << "Name|Ability" << endl;
@@ -286,13 +334,19 @@ for (int i = 0; i < 2; i++) {
             cout << j+1 << ". " << advisorLines[j] << endl;
         }
         cout << endl;
-        randoAdvisor = advisorLines[dice(rollDice()) - 1];
+        int rollAdvisor = rand() % advisorLines.size();
+        randoAdvisor = advisorLines[rollAdvisor];
+        dice(rollAdvisor + 1);
         p[i].storeAdvisor(randoAdvisor);
+        p[i].advisorNo = rollAdvisor;
+
+        advisorLines.erase(advisorLines.begin() + (rollAdvisor - 1));
+
         string randoName = p[i].getAdvisorName();
         string randoAbility = p[i].getAdvisorAbility();
         cout << "You got: " << randoName << ", Their ability is: " << randoAbility << endl;
         cout << "Press Enter to Continue..." << endl;
-        cin.ignore();
+        cin.ignore(100000, '\n');
         cin.get();
     }
     if (index == 1) {
@@ -312,7 +366,7 @@ for (int i = 0; i < 2; i++) {
     cout << "These are your Starting Positions!" << endl;
     board.displayBoard(); // initial positions
     cout << "Press Enter to Begin!" << endl;
-    cin.ignore();
+    cin.ignore(100000, '\n');
     cin.get();
    
   bool playerNotDone[2] = {true, true}; // tests to see if players have reached the goal
@@ -329,11 +383,13 @@ for (int i = 0; i < 2; i++) {
             choosing = displayMenu(i, p, board, name);
         }
         int moved;
-        cout << name <<", Roll Your Dice To Move (Press Enter)" << endl;
-        cin.ignore();
-        if(cin.get()) {
-            moved = dice(rollDice());
-        }
+        cout << endl;
+        cout << name <<", Roll Your Dice To Move (Press Enter)";
+        cin.ignore(100000, '\n');
+        cin.get();
+
+        moved = dice(rollDice());
+        p[i].roll = moved;
         board = movePhase(moved,i,board);
     }
     else{
@@ -347,15 +403,33 @@ for (int i = 0; i < 2; i++) {
     }
 
     board.displayBoard();  // displays board after each individual move
-    cin.ignore();
+
+    eventUpdater.board = board;
+    eventUpdater.player = p[i];
+    eventUpdater = runEvent(i,board.getPlayerPosition(i),eventUpdater);  // After displaying, we want to run the event
+    board = eventUpdater.board;
+    p[i] = eventUpdater.player;
+
+    cout << endl;
+    cout << "Press Enter to Continue..." << endl;
+    cin.ignore(100000, '\n');
     cin.get();
-    runEvent(i,board.getPlayerPosition(i),board);  // After displaying, we want to run the event
     } 
   }
   // after both players have reached the end, this is run (point calculation, winner, etc.)
- 
- 
+  cout << "Both Players Have Reached the End Congratulations!" << endl << endl;
+  cout << "And the Winner is..." << endl;
 
-
+  if(p[0].calculateTotal() > p[1].calculateTotal()) {
+    cout << p[0].getPlayerName() << " Has Won with a total of " << p[0].getPridePoints() << " Pride Points!" << endl;
+    cout << "While " << p[1].getPlayerName() << " came in second with " << p[1].getPridePoints() 
+    << " Pride Points!" << endl;
+  }
+  else if(p[0].calculateTotal() < p[1].calculateTotal()) {
+    cout << p[1].getPlayerName() << " Has Won with a total of " << p[1].getPridePoints() << " Pride Points!" << endl;
+    cout << "While " << p[0].getPlayerName() << " came in second with " << p[0].getPridePoints() 
+    << " Pride Points!" << endl;
+  }
+ 
   return 0;
 }
