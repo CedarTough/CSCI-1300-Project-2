@@ -37,9 +37,9 @@ void Board::initializeTiles(int boardType)
 
         probBlue=20;
         probPink=20;
-        probBrown=20;
-        probRed=20;
-        probPurple=20;
+        probBrown=10;
+        probRed=25;
+        probPurple=25;
     }
     else {
         greenMax=15;
@@ -176,7 +176,7 @@ void Board::displayTrack(int track_index) {
     for (int i = 0; i < _BOARD_SIZE; i++) {
         displayTile(track_index, i);
     }
-    cout << "                                                                                           "<< endl;
+    cout << "                                                                                                                                       "<< endl;
 }
 
 void Board::displayBoard() {
@@ -188,12 +188,16 @@ void Board::displayBoard() {
     }
 }
 
-bool Board::movePlayer(int player_index) {
-    _player_position[player_index]++;
-
+bool Board::movePlayer(int player_index, int num) {
+    _player_position[player_index]+=num;
+    
+    if (_player_position[player_index] < 0) {
+            _player_position[player_index]=0;
+    }
     if (_player_position[player_index] == _BOARD_SIZE -1) {
         return true;
     }
+    
     return false; 
 }
 
