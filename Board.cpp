@@ -37,9 +37,9 @@ void Board::initializeTiles(int boardType)
 
         probBlue=20;
         probPink=20;
-        probBrown=20;
-        probRed=20;
-        probPurple=20;
+        probBrown=10;
+        probRed=25;
+        probPurple=25;
     }
     else {
         greenMax=15;
@@ -176,7 +176,7 @@ void Board::displayTrack(int track_index) {
     for (int i = 0; i < _BOARD_SIZE; i++) {
         displayTile(track_index, i);
     }
-    cout << "                                                                                           "<< endl;
+    cout << "                                                                                                                                       "<< endl;
 }
 
 void Board::displayBoard() {
