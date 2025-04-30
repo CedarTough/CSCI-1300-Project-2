@@ -1,5 +1,6 @@
 #ifndef BOARD_H
 #define BOARD_H
+#include <vector>
 #include "Tile.h"
 
 class Board
@@ -20,7 +21,7 @@ public:
     void displayTrack(int player_index);
     void initializeBoard();
     void displayBoard();
-    bool movePlayer(int player_index);
+    bool movePlayer(int player_index,int num);
     int getPlayerPosition(int player_index) const;
     int _player_position[_MAX_PLAYERS];
     int playerBoard[2]={0,0};
