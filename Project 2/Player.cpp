@@ -87,6 +87,22 @@ string Player::getPlayerName() {
     return playerName;
 }
 
+int Player::getPridePoints() {
+    return pridePoints;
+}
+
+int Player::getStrength() {
+    return strength;
+}
+
+int Player::getStamina() {
+    return stamina;
+}
+
+int Player::getWisdom() {
+    return wisdom;
+}
+
 void Player::print(){
     cout << "Player Name: " << playerName << endl;
     cout << "Character Name: " << characterName << endl;
@@ -102,4 +118,10 @@ void Player::print(){
     else if (path == 1) {
         cout << "Cub Training" << endl;
     }
+}
+
+int Player::calculateTotal() {
+    int extra = ((stamina/100) + (strength/100) + (wisdom/100)) * 1000;
+    pridePoints += extra;
+    return pridePoints;
 }
