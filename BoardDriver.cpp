@@ -12,6 +12,12 @@ using namespace std;
 // board.movePlayer(0); this moves player 1
 // board.movePlayer(1); this move player 2
 
+void pause() {
+    cout << "Press Enter to Return to Main Menu..." << endl;
+    cin.ignore(100000, '\n');
+    cin.get();
+}
+
 eventUpdate runEvent(int playerNo,int pos,eventUpdate eventUpdater){
     int color = eventUpdater.board.returnTileColor(playerNo,pos);  // Change function names when we know what each color reps.
     if (color == 'R') {
@@ -158,9 +164,7 @@ bool displayMenu (int index, Player player[], Board board, string name) {
             system("cls");
             if(player[index].getAdvisorName() == "") {
                 cout << "You have no Advisor" << endl;
-                cout << "Press Enter to Return to Main Menu..." << endl;
-                cin.ignore();
-                cin.get();
+                pause();
                 break;
             }
             else {
@@ -174,12 +178,14 @@ bool displayMenu (int index, Player player[], Board board, string name) {
                         cout << "Your Advisors Name is: " << player[index].getAdvisorName() << endl;
                         cout << "Press Enter to Return to Advisor Menu..." << endl;
                         cin.ignore();
+                        cin.ignore();
                         cin.get();
                         break;
                     case 1:
                         system("cls");
                         cout << "Your Advisors Ability is: " << player[index].getAdvisorAbility() << endl;
                         cout << "Press Enter to Return to Advisor Menu..." << endl;
+                        cin.ignore();
                         cin.ignore();
                         cin.get();
                         break;
@@ -192,9 +198,7 @@ bool displayMenu (int index, Player player[], Board board, string name) {
         case 2: //View Board
             system("cls");
             board.displayBoard();
-            cout << "Press Enter to Return to Main Menu..." << endl;
-            cin.ignore();
-            cin.get();
+            pause();
             break;
 
         case 3: {//Check Standing
@@ -224,18 +228,14 @@ bool displayMenu (int index, Player player[], Board board, string name) {
                     break;
             }
         }
-            cout << "Press Enter to Return to Main Menu..." << endl;
-            cin.ignore();
-            cin.get();
+            pause();
             break;
         
         case 4: //Check Player Progress
             system("cls");
             player[index].print();
             cout << endl;
-            cout << "Press Enter to Return to Main Menu..." << endl;
-            cin.ignore();
-            cin.get();
+            pause();
             break;
     }
     return true;
@@ -312,7 +312,7 @@ for (int i = 0; i < 2; i++) {
         cout << "Gain 5,000 pride points" << endl;
         cout << "+200 Strength, Stamina, and Wisdom Points" << endl << endl;
         cout << "Press Enter to return to Path Selection..." << endl;
-        cin.ignore();
+        cin.ignore(100000, '\n');
         cin.get();
         index = arrowKeys(path, index, pathHeader);
     }
@@ -325,6 +325,7 @@ for (int i = 0; i < 2; i++) {
         p[i].setWisdom(1000);
 
         string randoAdvisor;
+        cout << endl;
         cout << playerName << ": You chose Cub Training, a random Advisor will now be given to you." << endl << endl;
         cout << "----Advisor List----" << endl;
         cout << "Name|Ability" << endl;
@@ -345,7 +346,7 @@ for (int i = 0; i < 2; i++) {
         string randoAbility = p[i].getAdvisorAbility();
         cout << "You got: " << randoName << ", Their ability is: " << randoAbility << endl;
         cout << "Press Enter to Continue..." << endl;
-        cin.ignore();
+        cin.ignore(100000, '\n');
         cin.get();
     }
     if (index == 1) {
@@ -365,7 +366,7 @@ for (int i = 0; i < 2; i++) {
     cout << "These are your Starting Positions!" << endl;
     board.displayBoard(); // initial positions
     cout << "Press Enter to Begin!" << endl;
-    cin.ignore();
+    cin.ignore(100000, '\n');
     cin.get();
    
   bool playerNotDone[2] = {true, true}; // tests to see if players have reached the goal
@@ -382,11 +383,13 @@ for (int i = 0; i < 2; i++) {
             choosing = displayMenu(i, p, board, name);
         }
         int moved;
-        cout << name <<", Roll Your Dice To Move (Press Enter)" << endl;
-        cin.ignore();
-        if(cin.get()) {
-            moved = dice(rollDice());
-        }
+        cout << endl;
+        cout << name <<", Roll Your Dice To Move (Press Enter)";
+        cin.ignore(100000, '\n');
+        cin.get();
+
+        moved = dice(rollDice());
+        p[i].roll = moved;
         board = movePhase(moved,i,board);
     }
     else{
@@ -407,7 +410,9 @@ for (int i = 0; i < 2; i++) {
     board = eventUpdater.board;
     p[i] = eventUpdater.player;
 
-    cin.ignore();
+    cout << endl;
+    cout << "Press Enter to Continue..." << endl;
+    cin.ignore(100000, '\n');
     cin.get();
     } 
   }
