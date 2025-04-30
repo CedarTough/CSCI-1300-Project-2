@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <iostream>
+#include "Board.h"
 
 using namespace std;
 
@@ -18,19 +19,37 @@ class Player {
         int path;
     public:
         Player();
+        int roll;
+        string advisorNo;
+
         void storeStats(const vector<string>);
         void storePath(int);
         void storeAdvisor(string);
+
         void print();
         void setName(string);
         void setStrength(int);
+
         void setStamina(int);
         void setWisdom(int);
         void setPridePoints(int);
+
         string getAdvisorName();
         string getAdvisorAbility();
         int getPath();
+
         string getPlayerName();
+        int getPridePoints();
+        int calculateTotal();
+
+        int getStrength();
+        int getWisdom();
+        int getStamina();
+};
+
+struct eventUpdate{
+    Board board;
+    Player player;
 };
 
 #endif
