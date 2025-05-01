@@ -1,3 +1,8 @@
+/*
+Names: Josiah Galvan 
+       Alexander Gholmieh
+*/
+
 #include <iostream>
 #include <cstdlib> 
 #include <ctime> 
@@ -393,7 +398,6 @@ for (int i = 0; i < 2; i++) {
         board = movePhase(moved,i,board);
     }
     else{
-        cin.get(); // gets can be commented out once the menus done
         cout<< "Player "<< i+1 << " has finished \n";
     }
 
@@ -419,6 +423,29 @@ for (int i = 0; i < 2; i++) {
   // after both players have reached the end, this is run (point calculation, winner, etc.)
   cout << "Both Players Have Reached the End Congratulations!" << endl << endl;
   cout << "And the Winner is..." << endl;
+
+  vector<string> playerInfo1 = p[0].vectorToFile();
+  vector<string> playerInfo2 = p[1].vectorToFile();
+  int playerInfoSize1 = playerInfo1.size();
+  int playerInfoSize2 = playerInfo2.size();
+
+  ofstream outFile("endStats.txt");
+  if(outFile.is_open()) {
+    for(int i = 0; i < playerInfoSize1; i++) {
+        outFile << playerInfo1[i] << endl;
+    }
+
+    outFile << endl;
+
+    for(int j = 0; j < playerInfoSize2; j++) {
+        outFile << playerInfo2[j] << endl;
+    }
+
+    outFile.close();
+  }
+  else {
+    cout << "Couldnt Open End Stats File" << endl;
+  }
 
   if(p[0].calculateTotal() > p[1].calculateTotal()) {
     cout << p[0].getPlayerName() << " Has Won with a total of " << p[0].getPridePoints() << " Pride Points!" << endl;
