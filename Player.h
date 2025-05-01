@@ -1,6 +1,12 @@
+/*
+Names: Josiah Galvan 
+       Alexander Gholmieh
+*/
+
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <iostream>
+#include <fstream>
 #include "Board.h"
 
 using namespace std;
@@ -45,6 +51,8 @@ class Player {
         int getStrength();
         int getWisdom();
         int getStamina();
+
+        vector<string> vectorToFile();
 };
 
 struct eventUpdate{
