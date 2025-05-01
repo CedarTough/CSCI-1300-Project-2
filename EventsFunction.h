@@ -1,3 +1,8 @@
+/*
+Names: Josiah Galvan 
+       Alexander Gholmieh
+*/
+
 #include <iostream>
 #include <cstdlib> 
 #include "Board.h"
