@@ -1,6 +1,12 @@
+/*
+Names: Josiah Galvan 
+       Alexander Gholmieh
+*/
+
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <fstream>
 #include "Player.h"
 
 using namespace std;
@@ -113,11 +119,30 @@ void Player::print(){
     cout << "Pride Points: " << pridePoints << endl;
     cout << "Path Choosen: ";
     if (path == 0) {
-        cout << "Pride Lands" << endl;
-    }
-    else if (path == 1) {
         cout << "Cub Training" << endl;
     }
+    else if (path == 1) {
+        cout << "Pride Lands" << endl;
+    }
+}
+
+vector<string> Player::vectorToFile() {
+    vector<string> info;
+    info.push_back("Player Name: " + playerName);
+    info.push_back("Character Name: " + characterName);
+    info.push_back("Age: " + to_string(age) );
+    info.push_back("Strength: " + to_string(strength) );
+    info.push_back("Wisdom: " + to_string(wisdom));
+    info.push_back("Pride Points: " + to_string(pridePoints));
+    info.push_back("Path Choosen: ");
+    if (path == 0) {
+        info.push_back("Cub Training");
+    }
+    else if (path == 1) {
+        info.push_back("Pride Lands");
+    }
+
+    return info;
 }
 
 int Player::calculateTotal() {
