@@ -1,3 +1,8 @@
+/*
+Names: Josiah Galvan 
+       Alexander Gholmieh
+*/
+
 #include "Board.h"
 #include "Player.h"
 #include <iostream>
