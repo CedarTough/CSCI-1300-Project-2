@@ -1,3 +1,8 @@
+/*
+Names: Josiah Galvan 
+       Alexander Gholmieh
+*/
+
 #ifndef BOARD_H
 #define BOARD_H
 #include <vector>
